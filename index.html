@@ -4,30 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Create a booth</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Mali:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#ffffff; --panel:#ffffff; --panel2:#faf4e8; --panel-a:rgba(255,255,255,.92);
-  --line:#efe5d3; --ink:#5b4a47; --muted:#a3968a; --accent:#ee8ba6; --accent-d:#e0708f; --accent-soft:#fde8ee;
-  --scene-bg:#ffffff; --floor:#fffff; --shadow:0 6px 22px rgba(130,95,60,.10);
-  --font:'PKF Dreamy','PKF-Dreamy','PKFDreamy','Mali',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --bg:#ffffff; --panel:#ffffff; --panel2:#f6f6f6; --panel-a:rgba(255,255,255,.92);
+  --line:#ececec; --ink:#4a4343; --muted:#9a9a9a; --accent:#ee8ba6; --accent-d:#e0708f; --accent-soft:#fde8ee;
+  --scene-bg:#ffffff; --floor:#ffffff; --shadow:0 6px 22px rgba(0,0,0,.07);
+  --font:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#ffffff; --panel:#322a29; --panel2:#2c2524; --panel-a:rgba(50,42,41,.92);
-    --line:#463b39; --ink:#f3e8e2; --muted:#a39590; --accent:#f19ab1; --accent-d:#f4adc0; --accent-soft:#4a3037;
-    --scene-bg:#ffffff; --floor:#fffff; --shadow:0 6px 22px rgba(0,0,0,.35);
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#ffffff; --panel:#322a29; --panel2:#2c2524; --panel-a:rgba(50,42,41,.92);
-  --line:#463b39; --ink:#f3e8e2; --muted:#a39590; --accent:#f19ab1; --accent-d:#f4adc0; --accent-soft:#4a3037;
-  --scene-bg:#ffffff; --floor:#ffffff; --shadow:0 6px 22px rgba(0,0,0,.35);
 }
 html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:border-box}
@@ -44,7 +29,7 @@ header{flex:none;display:flex;align-items:center;justify-content:space-between;p
 .brand h1{margin:0;font-size:19px;line-height:1.1;font-weight:700;letter-spacing:.2px;white-space:nowrap}
 .brand small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
 .hbtns{display:flex;gap:8px}
-.fab{width:40px;height:40px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);display:grid;place-items:center;box-shadow:0 2px 8px rgba(130,95,60,.08);transition:transform .12s,opacity .2s}
+.fab{width:40px;height:40px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);display:grid;place-items:center;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:transform .12s,opacity .2s}
 .fab:active{transform:scale(.94)}
 .fab[disabled]{opacity:.35;cursor:default;box-shadow:none}
 .fab.sm{width:38px;height:38px;border-radius:13px}
@@ -158,6 +143,7 @@ input[type=range]::-moz-range-thumb{width:16px;height:16px;border-radius:50%;bac
       <div><h1>Create a booth</h1><small>Table layout planner</small></div>
     </div>
     <div class="hbtns">
+      <button class="fab" id="save" title="Save image" aria-label="Save image"></button>
       <button class="fab" id="undo" title="Undo" aria-label="Undo"></button>
       <button class="fab" id="redo" title="Redo" aria-label="Redo"></button>
     </div>
@@ -205,6 +191,7 @@ function h(tag,attrs,...kids){
 const ICON={
  undo:'<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',
  redo:'<path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/>',
+ download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/>',
  plus:'<path d="M5 12h14"/><path d="M12 5v14"/>',
  minus:'<path d="M5 12h14"/>',
  x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
@@ -232,18 +219,18 @@ const ICON={
  unlock:'<rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 7.5-2"/>',
  upload:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/>',
  fit:'<path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/>',
- type:'<path d="M4 7V4h16v3M9 20h6M12 4v16"/>',
  cube:'<path d="M12 2.5 20.5 7v10L12 21.5 3.5 17V7z"/><path d="M3.8 7.2 12 12l8.2-4.8M12 12v9.3"/>',
  ruler:'<rect x="2.5" y="8" width="19" height="8" rx="2"/><path d="M7 8v3M11 8v4M15 8v3M19 8v2"/>'
 };
 const ic=(n,s=20)=>'<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICON[n]+'</svg>';
 $('#logo').innerHTML=ic('cube',22);
+$('#save').innerHTML=ic('download',20);
 $('#undo').innerHTML=ic('undo',20);$('#redo').innerHTML=ic('redo',20);$('#fit').innerHTML=ic('fit',18);
 
 /* ---------- data model ---------- */
 const SEG=20, FOOT=1.6;
 const PASTELS=['#f9c9d6','#cfe8dc','#dcd3f2','#fbe3b7','#c9e1f4','#f6d5c4'];
-const LS_KEY='create-a-booth-v1', LS_FONT='create-a-booth-font';
+const LS_KEY='create-a-booth-v1';
 const base=(type,name,o)=>Object.assign({id:uid(),type,name,x:0,z:0,rotY:0,elev:0,auto:true,hidden:false,locked:false},o||{});
 const mkPrint=o=>base('image','Picture',Object.assign({w:12,h:16,asp:.75,ratio:true,t:.3,pose:'flat',lean:70,rot90:false,flip:false,front:null,back:null,cut:false,base:true,color:PASTELS[0],edge:'#fffaf2'},o));
 const mkBox=o=>base('box','Riser box',Object.assign({w:24,d:14,h:6,color:'#f9c9d6'},o));
@@ -339,28 +326,24 @@ renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 const maxAniso=Math.min(8,renderer.capabilities.getMaxAnisotropy());
 const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(40,1,0.5,3000);
-scene.add(new THREE.HemisphereLight(0xffffff,0xf3e6d2,0.5));
+scene.add(new THREE.HemisphereLight(0xffffff,0xeeeeee,0.5));
 const sun=new THREE.DirectionalLight(0xffffff,0.4);
 sun.position.set(-140,300,170);sun.target.position.set(0,0,0);
 sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
 Object.assign(sun.shadow.camera,{left:-260,right:260,top:260,bottom:-260,near:50,far:800});
 sun.shadow.bias=-0.0006;sun.shadow.normalBias=0.25;sun.shadow.radius=3;
 scene.add(sun,sun.target);
-const floorMat=new THREE.MeshLambertMaterial({color:0xf3eada});
+/* the floor only shows shadows, so the background stays pure white */
+const floorMat=new THREE.ShadowMaterial({opacity:.14});
 const floor=new THREE.Mesh(new THREE.CircleGeometry(1100,48),floorMat);
 floor.rotation.x=-Math.PI/2;floor.position.y=-75;floor.receiveShadow=true;scene.add(floor);
 const tableGroup=new THREE.Group(),itemsRoot=new THREE.Group();scene.add(tableGroup,itemsRoot);
 const OBJ={},KIDOBJ={};
 
 function applyTheme(){
-  const cs=getComputedStyle(document.documentElement);
-  const bg=cs.getPropertyValue('--scene-bg').trim()||'#fdf9f1';
-  const fl=cs.getPropertyValue('--floor').trim()||'#f3eada';
-  scene.background=new THREE.Color(bg);scene.fog=new THREE.Fog(new THREE.Color(bg),500,1150);
-  floorMat.color.set(fl);requestRender();
+  scene.background=new THREE.Color('#ffffff');scene.fog=new THREE.Fog(new THREE.Color('#ffffff'),500,1150);
+  requestRender();
 }
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change',applyTheme);
-new MutationObserver(applyTheme).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
 
 /* materials & textures */
 function getTex(id,flat){
@@ -765,6 +748,27 @@ function save(){
   },500);
 }
 
+/* ---------- save design as image ---------- */
+function saveImage(){
+  const hv=helper?helper.visible:null;
+  if(helper)helper.visible=false;               // hide the selection box
+  const pr=renderer.getPixelRatio(),w=canvas.clientWidth,hh=canvas.clientHeight;
+  renderer.setPixelRatio(Math.max(pr,2));       // sharper export
+  renderer.setSize(w,hh,false);
+  applyCam();renderer.render(scene,camera);
+  let url='';
+  try{url=canvas.toDataURL('image/png');}catch(e){}
+  renderer.setPixelRatio(pr);renderer.setSize(w,hh,false);
+  if(helper&&hv!==null)helper.visible=hv;
+  requestRender();
+  if(!url){toast('Could not save the image.');return;}
+  const a=document.createElement('a');
+  a.href=url;a.download='my-booth.png';
+  document.body.append(a);a.click();a.remove();
+  toast('Image saved');
+}
+$('#save').onclick=saveImage;
+
 /* ---------- selection UI ---------- */
 function select(s){
   sel=s;setHelper();updateAll();requestRender();
@@ -1153,9 +1157,9 @@ function renderView(root){
   root.append(toggle('Snap to grid','Neat 1 cm steps while dragging',()=>opts.snap,v=>{opts.snap=v;save();}));
   root.append(toggle('Table ruler','Grid lines and cm marks',()=>opts.grid,v=>{opts.grid=v;buildTable();save();}));
   root.append(toggle('Soft shadows','',()=>opts.shadows,v=>{opts.shadows=v;sun.castShadow=v;requestRender();save();}));
-  root.append(sect('Font'));
-  root.append(h('div',{class:'sub'},'Upload your own font file (.ttf, .otf, .woff) such as PKF Dreamy to restyle the whole app.'));
-  root.append(h('div',{class:'btns'},btn('type','Upload font',uploadFont),btn('x','Reset font',resetFont)));
+  root.append(sect('Export'));
+  root.append(h('div',{class:'sub'},'Pick a camera angle above, then save your table layout as a PNG image.'));
+  root.append(h('div',{class:'btns'},btn('download','Save as image',saveImage,'primary')));
   syncAll();
 }
 function setTab(t){tab=t;$('#panel').classList.remove('collapsed');updateAll();}
@@ -1168,28 +1172,6 @@ function updateTabs(){
     if(k==='edit'&&sel&&tab!=='edit')b.append(h('span',{class:'dot'}));
     nav.append(b);
   });
-}
-
-/* ---------- custom font ---------- */
-async function applyFontBuffer(buf){
-  const ff=new FontFace('PKF Dreamy',buf);await ff.load();document.fonts.add(ff);
-}
-async function uploadFont(){
-  const i=document.createElement('input');i.type='file';i.accept='.ttf,.otf,.woff,.woff2,font/*';i.style.display='none';document.body.append(i);
-  i.addEventListener('change',async()=>{
-    const f=i.files[0];i.remove();if(!f)return;
-    try{
-      const buf=await f.arrayBuffer();await applyFontBuffer(buf.slice(0));
-      toast('Font applied');
-      try{let s='';const u=new Uint8Array(buf);for(let k=0;k<u.length;k+=8192)s+=String.fromCharCode.apply(null,u.subarray(k,k+8192));
-        if(s.length<2.4e6)localStorage.setItem(LS_FONT,btoa(s));}catch(e){}
-    }catch(err){toast('That font file could not be loaded.');}
-  });
-  i.addEventListener('cancel',()=>i.remove());i.click();
-}
-function resetFont(){try{localStorage.removeItem(LS_FONT);}catch(e){}toast('Font reset. Reload to use the default.');}
-async function restoreFont(){
-  try{const b=localStorage.getItem(LS_FONT);if(!b)return;const s=atob(b),u=new Uint8Array(s.length);for(let k=0;k<s.length;k++)u[k]=s.charCodeAt(k);await applyFontBuffer(u.buffer);}catch(e){}
 }
 
 /* ---------- sample layout ---------- */
@@ -1230,7 +1212,6 @@ async function init(){
   hist=[snap()];hp=0;
   resize();viewPreset('persp',true);
   updateAll();updateUndoUI();loop();
-  restoreFont();
 }
 init();
 })();
